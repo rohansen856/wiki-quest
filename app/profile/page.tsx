@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,8 +32,8 @@ export default function ProfilePage() {
   ])
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex mx-auto min-h-screen flex-col">
+      <header className="sticky mx-auto top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
@@ -51,7 +51,7 @@ export default function ProfilePage() {
           </nav>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 mx-auto">
         <div className="container py-8">
           <div className="mb-8 flex items-center">
             <div className="rounded-full bg-purple-100 p-4 mr-4">
@@ -59,7 +59,9 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold">Your Profile</h1>
-              <p className="text-muted-foreground">Track your progress and achievements</p>
+              <p className="text-muted-foreground">
+                Track your progress and achievements
+              </p>
             </div>
           </div>
 
@@ -76,7 +78,9 @@ export default function ProfilePage() {
                       <div key={quest.id} className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="font-medium">{quest.name}</span>
-                          <span className="text-sm text-muted-foreground">{quest.progress}%</span>
+                          <span className="text-sm text-muted-foreground">
+                            {quest.progress}%
+                          </span>
                         </div>
                         <Progress value={quest.progress} className="h-2" />
                         <div className="flex justify-end">
@@ -87,7 +91,11 @@ export default function ProfilePage() {
                             </span>
                           ) : (
                             <Link href={`/quest/${quest.id}`}>
-                              <Button variant="link" size="sm" className="h-auto p-0 text-xs">
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 text-xs"
+                              >
                                 {quest.progress > 0 ? "Continue" : "Start"}
                               </Button>
                             </Link>
@@ -102,25 +110,35 @@ export default function ProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Overall Stats</CardTitle>
-                  <CardDescription>Your Wikipedia editor journey</CardDescription>
+                  <CardDescription>
+                    Your Wikipedia editor journey
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="rounded-lg border p-4 text-center">
                       <div className="text-2xl font-bold">2/6</div>
-                      <div className="text-xs text-muted-foreground">Quests Completed</div>
+                      <div className="text-xs text-muted-foreground">
+                        Quests Completed
+                      </div>
                     </div>
                     <div className="rounded-lg border p-4 text-center">
                       <div className="text-2xl font-bold">2</div>
-                      <div className="text-xs text-muted-foreground">Badges Earned</div>
+                      <div className="text-xs text-muted-foreground">
+                        Badges Earned
+                      </div>
                     </div>
                     <div className="rounded-lg border p-4 text-center">
                       <div className="text-2xl font-bold">10</div>
-                      <div className="text-xs text-muted-foreground">Quiz Questions Answered</div>
+                      <div className="text-xs text-muted-foreground">
+                        Quiz Questions Answered
+                      </div>
                     </div>
                     <div className="rounded-lg border p-4 text-center">
                       <div className="text-2xl font-bold">90%</div>
-                      <div className="text-xs text-muted-foreground">Quiz Accuracy</div>
+                      <div className="text-xs text-muted-foreground">
+                        Quiz Accuracy
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -136,13 +154,18 @@ export default function ProfilePage() {
                 <CardContent>
                   <div className="grid gap-4">
                     {earnedBadges.map((badge) => (
-                      <div key={badge.id} className="flex items-start space-x-4 rounded-lg border p-4">
+                      <div
+                        key={badge.id}
+                        className="flex items-start space-x-4 rounded-lg border p-4"
+                      >
                         <div className="rounded-full bg-purple-100 p-3">
                           <Award className="h-6 w-6 text-purple-600" />
                         </div>
                         <div>
                           <h3 className="font-medium">{badge.name}</h3>
-                          <p className="text-sm text-muted-foreground">{badge.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {badge.description}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -152,7 +175,9 @@ export default function ProfilePage() {
                         <Award className="h-6 w-6 text-muted-foreground/60" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-muted-foreground/80">Verifiability Expert</h3>
+                        <h3 className="font-medium text-muted-foreground/80">
+                          Verifiability Expert
+                        </h3>
                         <p className="text-sm text-muted-foreground">
                           Complete the Verifiability quest to earn this badge
                         </p>
@@ -164,9 +189,12 @@ export default function ProfilePage() {
                         <Award className="h-6 w-6 text-muted-foreground/60" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-muted-foreground/80">Neutrality Guardian</h3>
+                        <h3 className="font-medium text-muted-foreground/80">
+                          Neutrality Guardian
+                        </h3>
                         <p className="text-sm text-muted-foreground">
-                          Complete the Neutral Point of View quest to earn this badge
+                          Complete the Neutral Point of View quest to earn this
+                          badge
                         </p>
                       </div>
                     </div>
@@ -178,6 +206,6 @@ export default function ProfilePage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
