@@ -14,7 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Award, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { QuizFeedback } from "@/components/quiz-feedback";
 
 export function PillarQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -22,10 +22,9 @@ export function PillarQuiz() {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [feedback, setFeedback] = useState<{
-    isCorrect: boolean;
-    message: string;
-  } | null>(null);
+  const [feedback, setFeedback] = useState<boolean | null>(null);
+  const [totalCoins, setTotalCoins] = useState(0);
+  const [earnedBadges, setEarnedBadges] = useState<string[]>([]);
 
   const questions = [
     {
@@ -39,7 +38,9 @@ export function PillarQuiz() {
       correctAnswer: "Wikipedia is an encyclopedia",
       explanation:
         "Wikipedia is an encyclopedia that contains information on all branches of knowledge. It is not a platform for other purposes like social networking, blogging, or dictionary definitions.",
-      policy: "WP:ENCYCLOPEDIA",
+      policyCode: "WP:ENCYCLOPEDIA",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:What_Wikipedia_is_not#Wikipedia_is_an_encyclopedia",
     },
     {
       question: "What does 'neutral point of view' mean in Wikipedia?",
@@ -52,7 +53,9 @@ export function PillarQuiz() {
         "Articles should represent all significant viewpoints fairly and without bias",
       explanation:
         "Neutral point of view means representing all significant viewpoints fairly, proportionately, and without bias. This is fundamental to Wikipedia's approach to content.",
-      policy: "WP:NPOV",
+      policyCode: "WP:NPOV",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:Neutral_point_of_view",
     },
     {
       question: "Under what license is Wikipedia content available?",
@@ -65,7 +68,8 @@ export function PillarQuiz() {
       correctAnswer: "Creative Commons Attribution-ShareAlike License",
       explanation:
         "Wikipedia content is available under the Creative Commons Attribution-ShareAlike License, which allows anyone to use, modify, and share the content as long as they attribute the source and share under the same license.",
-      policy: "WP:CCBYSA",
+      policyCode: "WP:CCBYSA",
+      policyLink: "https://en.wikipedia.org/wiki/Wikipedia:Copyrights",
     },
     {
       question: "How should Wikipedia editors interact with each other?",
@@ -78,7 +82,8 @@ export function PillarQuiz() {
       correctAnswer: "With respect and civility, even during disagreements",
       explanation:
         "Wikipedia editors should interact with respect and civility, even when they disagree. This fosters a collaborative environment where constructive editing can take place.",
-      policy: "WP:CIVIL",
+      policyCode: "WP:CIVIL",
+      policyLink: "https://en.wikipedia.org/wiki/Wikipedia:Civility",
     },
     {
       question:
@@ -93,7 +98,8 @@ export function PillarQuiz() {
         "The principles and spirit of rules matter more than literal wording",
       explanation:
         "This pillar means that while Wikipedia has policies and guidelines, they can evolve over time and sometimes exceptions are necessary. The spirit of the rules matters more than their literal interpretation.",
-      policy: "WP:IAR",
+      policyCode: "WP:IAR",
+      policyLink: "https://en.wikipedia.org/wiki/Wikipedia:Ignore_all_rules",
     },
   ];
 
@@ -112,17 +118,27 @@ export function PillarQuiz() {
 
     if (isCorrect) {
       setScore(score + 1);
-      setFeedback({
-        isCorrect: true,
-        message:
-          "Correct! Great job understanding this important Wikipedia principle.",
-      });
+      // Add 10-20 coins for correct answer
+      const coinsEarned = Math.floor(Math.random() * 11) + 10;
+      setTotalCoins(totalCoins + coinsEarned);
+
+      // Add a badge for correct answer
+      const badges = ["Pillar Pro", "Foundation Master", "Wiki Architect"];
+      const newBadge = badges[Math.floor(Math.random() * badges.length)];
+      if (!earnedBadges.includes(newBadge)) {
+        setEarnedBadges([...earnedBadges, newBadge]);
+      }
     } else {
-      setFeedback({
-        isCorrect: false,
-        message: `Incorrect. The correct answer is: "${questions[currentQuestion].correctAnswer}". ${questions[currentQuestion].explanation} (Reference: ${questions[currentQuestion].policy})`,
-      });
+      // Add 2 coins for trying
+      setTotalCoins(totalCoins + 2);
+
+      // Add a "Learner" badge if they don't have it
+      if (!earnedBadges.includes("Curious Explorer")) {
+        setEarnedBadges([...earnedBadges, "Curious Explorer"]);
+      }
     }
+
+    setFeedback(isCorrect);
   };
 
   const handleNextQuestion = () => {
@@ -166,6 +182,11 @@ export function PillarQuiz() {
                   You've earned the "Five Pillars" badge! You now understand the
                   fundamental principles of Wikipedia.
                 </p>
+                <div className="mt-4 text-center">
+                  <p className="font-medium">🎉 Total rewards earned:</p>
+                  <p>💰 {totalCoins} coins</p>
+                  <p>🏆 Badges: {earnedBadges.join(", ")}</p>
+                </div>
               </>
             ) : (
               <>
@@ -177,6 +198,11 @@ export function PillarQuiz() {
                   You need to score at least 80% to earn the badge. Review the
                   material and try again.
                 </p>
+                <div className="mt-4 text-center">
+                  <p className="font-medium">🎉 Rewards earned so far:</p>
+                  <p>💰 {totalCoins} coins</p>
+                  <p>🏆 Badges: {earnedBadges.join(", ")}</p>
+                </div>
               </>
             )}
           </div>
@@ -212,9 +238,14 @@ export function PillarQuiz() {
           <CardTitle>
             Question {currentQuestion + 1} of {questions.length}
           </CardTitle>
-          <span className="text-sm text-muted-foreground">
-            Score: {score}/{currentQuestion}
-          </span>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-muted-foreground">
+              Score: {score}/{currentQuestion}
+            </span>
+            <span className="text-sm font-medium text-amber-600">
+              💰 {totalCoins} coins
+            </span>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -269,19 +300,23 @@ export function PillarQuiz() {
             })}
           </RadioGroup>
 
-          {feedback && (
-            <Alert
-              className={
-                feedback.isCorrect
-                  ? "bg-green-50 border-green-200"
-                  : "bg-amber-50 border-amber-200"
+          {feedback !== null && (
+            <QuizFeedback
+              isCorrect={feedback}
+              correctAnswer={
+                !feedback ? questions[currentQuestion].correctAnswer : undefined
               }
-            >
-              <AlertTitle>
-                {feedback.isCorrect ? "Correct!" : "Incorrect"}
-              </AlertTitle>
-              <AlertDescription>{feedback.message}</AlertDescription>
-            </Alert>
+              explanation={
+                !feedback ? questions[currentQuestion].explanation : undefined
+              }
+              policyCode={
+                !feedback ? questions[currentQuestion].policyCode : undefined
+              }
+              policyLink={
+                !feedback ? questions[currentQuestion].policyLink : undefined
+              }
+              topic="five-pillars"
+            />
           )}
         </div>
       </CardContent>

@@ -14,7 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Award, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { QuizFeedback } from "@/components/quiz-feedback";
 
 export function WikipediaIsNotQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -22,10 +22,9 @@ export function WikipediaIsNotQuiz() {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [feedback, setFeedback] = useState<{
-    isCorrect: boolean;
-    message: string;
-  } | null>(null);
+  const [feedback, setFeedback] = useState<boolean | null>(null);
+  const [totalCoins, setTotalCoins] = useState(0);
+  const [earnedBadges, setEarnedBadges] = useState<string[]>([]);
 
   const questions = [
     {
@@ -40,7 +39,9 @@ export function WikipediaIsNotQuiz() {
       correctAnswer: "Creating an article that promotes your business",
       explanation:
         "Wikipedia is not a platform for promotion or advertising. Articles about businesses must be written from a neutral point of view and meet notability guidelines.",
-      policy: "WP:NOTPROMOTION",
+      policyCode: "WP:NOTPROMOTION",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:What_Wikipedia_is_not#Wikipedia_is_not_a_soapbox_or_means_of_promotion",
     },
     {
       question: "Why is Wikipedia not a place for original research?",
@@ -54,7 +55,9 @@ export function WikipediaIsNotQuiz() {
         "Because Wikipedia only accepts information that has been published in reliable sources",
       explanation:
         "Wikipedia's content is determined by previously published information rather than the beliefs, experiences, or research of its editors.",
-      policy: "WP:NOR",
+      policyCode: "WP:NOR",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:No_original_research",
     },
     {
       question:
@@ -69,7 +72,8 @@ export function WikipediaIsNotQuiz() {
         "Publish your theory in a peer-reviewed journal first, then cite that publication",
       explanation:
         "Wikipedia doesn't publish original research. New theories must first be published in reliable sources before they can be included in Wikipedia articles.",
-      policy: "WP:OR",
+      policyCode: "WP:OR",
+      policyLink: "https://en.wikipedia.org/wiki/Wikipedia:Original_research",
     },
     {
       question: "Why is Wikipedia not a social networking site?",
@@ -83,7 +87,9 @@ export function WikipediaIsNotQuiz() {
         "Because Wikipedia is focused on building an encyclopedia, not personal connections",
       explanation:
         "Wikipedia's purpose is to build an encyclopedia. User pages, talk pages, and other features exist to support this goal, not for social networking.",
-      policy: "WP:NOTSOCIAL",
+      policyCode: "WP:NOTSOCIAL",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:What_Wikipedia_is_not#Wikipedia_is_not_a_blog,_webspace_provider,_social_networking,_or_memorial_site",
     },
     {
       question:
@@ -97,7 +103,9 @@ export function WikipediaIsNotQuiz() {
       correctAnswer: "A memorial page for your recently deceased pet",
       explanation:
         "Wikipedia is not a memorial site. Articles should only be created for subjects that meet notability guidelines and have significant coverage in reliable sources.",
-      policy: "WP:NOTMEMORIAL",
+      policyCode: "WP:NOTMEMORIAL",
+      policyLink:
+        "https://en.wikipedia.org/wiki/Wikipedia:What_Wikipedia_is_not#Wikipedia_is_not_a_blog,_webspace_provider,_social_networking,_or_memorial_site",
     },
   ];
 
@@ -116,17 +124,31 @@ export function WikipediaIsNotQuiz() {
 
     if (isCorrect) {
       setScore(score + 1);
-      setFeedback({
-        isCorrect: true,
-        message:
-          "Correct! You've got a good understanding of what Wikipedia is not meant to be.",
-      });
+      // Add 10-20 coins for correct answer
+      const coinsEarned = Math.floor(Math.random() * 11) + 10;
+      setTotalCoins(totalCoins + coinsEarned);
+
+      // Add a badge for correct answer
+      const badges = [
+        "Boundary Guardian",
+        "Scope Sentinel",
+        "Purpose Protector",
+      ];
+      const newBadge = badges[Math.floor(Math.random() * badges.length)];
+      if (!earnedBadges.includes(newBadge)) {
+        setEarnedBadges([...earnedBadges, newBadge]);
+      }
     } else {
-      setFeedback({
-        isCorrect: false,
-        message: `Incorrect. The correct answer is: "${questions[currentQuestion].correctAnswer}". ${questions[currentQuestion].explanation} (Reference: ${questions[currentQuestion].policy})`,
-      });
+      // Add 2 coins for trying
+      setTotalCoins(totalCoins + 2);
+
+      // Add a "Learner" badge if they don't have it
+      if (!earnedBadges.includes("Curious Explorer")) {
+        setEarnedBadges([...earnedBadges, "Curious Explorer"]);
+      }
     }
+
+    setFeedback(isCorrect);
   };
 
   const handleNextQuestion = () => {
@@ -170,6 +192,11 @@ export function WikipediaIsNotQuiz() {
                   You've earned the "Wikipedia Boundaries" badge! You now
                   understand what Wikipedia is not meant to be.
                 </p>
+                <div className="mt-4 text-center">
+                  <p className="font-medium">🎉 Total rewards earned:</p>
+                  <p>💰 {totalCoins} coins</p>
+                  <p>🏆 Badges: {earnedBadges.join(", ")}</p>
+                </div>
               </>
             ) : (
               <>
@@ -181,6 +208,11 @@ export function WikipediaIsNotQuiz() {
                   You need to score at least 80% to earn the badge. Review the
                   material and try again.
                 </p>
+                <div className="mt-4 text-center">
+                  <p className="font-medium">🎉 Rewards earned so far:</p>
+                  <p>💰 {totalCoins} coins</p>
+                  <p>🏆 Badges: {earnedBadges.join(", ")}</p>
+                </div>
               </>
             )}
           </div>
@@ -216,9 +248,14 @@ export function WikipediaIsNotQuiz() {
           <CardTitle>
             Question {currentQuestion + 1} of {questions.length}
           </CardTitle>
-          <span className="text-sm text-muted-foreground">
-            Score: {score}/{currentQuestion}
-          </span>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-muted-foreground">
+              Score: {score}/{currentQuestion}
+            </span>
+            <span className="text-sm font-medium text-amber-600">
+              💰 {totalCoins} coins
+            </span>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -273,19 +310,23 @@ export function WikipediaIsNotQuiz() {
             })}
           </RadioGroup>
 
-          {feedback && (
-            <Alert
-              className={
-                feedback.isCorrect
-                  ? "bg-green-50 border-green-200"
-                  : "bg-amber-50 border-amber-200"
+          {feedback !== null && (
+            <QuizFeedback
+              isCorrect={feedback}
+              correctAnswer={
+                !feedback ? questions[currentQuestion].correctAnswer : undefined
               }
-            >
-              <AlertTitle>
-                {feedback.isCorrect ? "Correct!" : "Incorrect"}
-              </AlertTitle>
-              <AlertDescription>{feedback.message}</AlertDescription>
-            </Alert>
+              explanation={
+                !feedback ? questions[currentQuestion].explanation : undefined
+              }
+              policyCode={
+                !feedback ? questions[currentQuestion].policyCode : undefined
+              }
+              policyLink={
+                !feedback ? questions[currentQuestion].policyLink : undefined
+              }
+              topic="not-wikipedia"
+            />
           )}
         </div>
       </CardContent>
