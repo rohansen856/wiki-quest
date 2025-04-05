@@ -27,6 +27,5 @@ yarn-error.log*
 next-env.d.ts
 
 app
-components
 hooks
 lib
