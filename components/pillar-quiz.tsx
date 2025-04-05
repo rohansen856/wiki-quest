@@ -106,19 +106,23 @@ export function PillarQuiz() {
         <CardHeader>
           <CardTitle>Quiz Results</CardTitle>
           <CardDescription>
-            You scored {score} out of {questions.length} ({getScorePercentage()}%)
+            You scored {score} out of {questions.length} ({getScorePercentage()}
+            %)
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="flex mx-auto flex-col items-center justify-center space-y-4">
             {isPassing ? (
               <>
                 <div className="rounded-full bg-green-100 p-6">
                   <Award className="h-12 w-12 text-green-600" />
                 </div>
-                <h3 className="text-xl font-bold text-center">Congratulations!</h3>
+                <h3 className="text-xl font-bold text-center">
+                  Congratulations!
+                </h3>
                 <p className="text-center">
-                  You've earned the "Five Pillars" badge! You now understand the fundamental principles of Wikipedia.
+                  You've earned the "Five Pillars" badge! You now understand the
+                  fundamental principles of Wikipedia.
                 </p>
               </>
             ) : (
@@ -128,7 +132,8 @@ export function PillarQuiz() {
                 </div>
                 <h3 className="text-xl font-bold text-center">Almost there!</h3>
                 <p className="text-center">
-                  You need to score at least 80% to earn the badge. Review the material and try again.
+                  You need to score at least 80% to earn the badge. Review the
+                  material and try again.
                 </p>
               </>
             )}
@@ -139,11 +144,11 @@ export function PillarQuiz() {
             <Button
               variant="outline"
               onClick={() => {
-                setCurrentQuestion(0)
-                setSelectedAnswer(null)
-                setIsAnswerSubmitted(false)
-                setScore(0)
-                setQuizCompleted(false)
+                setCurrentQuestion(0);
+                setSelectedAnswer(null);
+                setIsAnswerSubmitted(false);
+                setScore(0);
+                setQuizCompleted(false);
               }}
             >
               Try Again
@@ -154,7 +159,7 @@ export function PillarQuiz() {
           </Link>
         </CardFooter>
       </Card>
-    )
+    );
   }
 
   return (

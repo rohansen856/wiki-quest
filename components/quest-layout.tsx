@@ -13,8 +13,8 @@ interface QuestLayoutProps {
 
 export function QuestLayout({ title, description, progress, children }: QuestLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex mx-auto min-h-screen flex-col">
+      <header className="sticky mx-auto top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
@@ -32,10 +32,13 @@ export function QuestLayout({ title, description, progress, children }: QuestLay
           </nav>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 mx-auto">
         <div className="container py-8">
           <div className="mb-8">
-            <Link href="/" className="text-sm text-muted-foreground hover:underline mb-2 inline-block">
+            <Link
+              href="/"
+              className="text-sm text-muted-foreground hover:underline mb-2 inline-block"
+            >
               ← Back to Quests
             </Link>
             <h1 className="text-3xl font-bold mb-2">{title}</h1>
@@ -52,6 +55,6 @@ export function QuestLayout({ title, description, progress, children }: QuestLay
         </div>
       </main>
     </div>
-  )
+  );
 }
 
